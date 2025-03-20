@@ -1,0 +1,30 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http: 
+
+processors:
+    batch:
+    
+exporters:
+  otlp:
+    endpoint: "apm-server:8200"
+    tls:
+      insecure: true
+    # secret_token: my-secret-token
+
+connectors:
+  spanmetrics:
+    dimensions:
+      - name: http.method
+      - name: http.status_code
+      - name: http.route
+
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlp]
